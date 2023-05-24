@@ -1,6 +1,17 @@
 # swift-dependencies-graph
 CLI tool to output mermaid dependencies between Swift Package Manager targets
 
+## Installation
+#### Mint
+```
+Ryu0118/swift-dependencies-graph@0.0.1
+```
+
+#### Homebrew
+```
+$ brew install Ryu0118/dgraph/dgraph
+``` 
+
 ## Usage
 ```
 USAGE: dgraph <project-path> [--add-to-readme]

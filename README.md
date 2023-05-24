@@ -18,10 +18,8 @@ OPTIONS:
 graph TD;
     App-->HogeFeature;
     App-->FugaFeature;
-    App-->LoginClient;
+    App-->LoginFeature;
     LoginFeature-->CoreModule;
-    LoginFeature-->LoginClient;
-    LoginClient-->CoreModule;
     HogeFeature-->CoreModule;
     FugaFeature-->CoreModule;
 ```

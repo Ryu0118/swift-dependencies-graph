@@ -11,6 +11,8 @@ struct DependenciesGraph: ParsableCommand {
     var isAddToReadme: Bool = false
 
     static let _commandName: String = "dgraph"
+    
+    private var fileManager: FileManager { FileManager.default }
 
     mutating func run() throws {
         #if os(macOS)
@@ -26,33 +28,36 @@ struct DependenciesGraph: ParsableCommand {
         if !URL(fileURLWithPath: projectPath).hasDirectoryPath {
             throw DependenciesGraphError.notDirectory(path: projectPath)
         }
-        else if !FileManager.default.fileExists(atPath: projectPath) {
+        else if !fileManager.fileExists(atPath: projectPath) {
             throw DependenciesGraphError.projectNotFound(path: projectPath)
         }
-        else if !FileManager.default.fileExists(atPath: projectPath + "/Package.swift") {
+        else if !fileManager.fileExists(atPath: projectPath + "/Package.swift") {
             throw DependenciesGraphError.packageSwiftNotFound(path: projectPath)
         }
-        else if !FileManager.default.fileExists(atPath: projectPath + "/README.md") && isAddToReadme {
+        else if !fileManager.fileExists(atPath: projectPath + "/README.md") && isAddToReadme {
             throw DependenciesGraphError.readmeNotFound
         }
     }
 
     private func addToReadme() throws {
         let mermaid = try createMermaid()
-        let url = URL(fileURLWithPath: projectPath)
-            .appendingPathComponent("README.md")
+        let readmeTitle = "## Package Dependencies"
+        let url = URL(fileURLWithPath: projectPath).appendingPathComponent("README.md")
+        if !fileManager.fileExists(atPath: url.absoluteString) {
+            fileManager.createFile(atPath: url.absoluteString, contents: nil)
+        }
         guard var readme = try String(data: Data(contentsOf: url), encoding: .utf8) else {
             throw DependenciesGraphError.failedToDecodeReadme
         }
-        readme = readme + "\n" + "# Package Dependencies" + "\n" + mermaid
+        let removedReadme = ReadmeReader.removeLines(readme, from: "## Package Dependencies")
+        readme = removedReadme + readmeTitle + "\n" + mermaid
         try readme.write(to: url, atomically: true, encoding: .utf8)
         print("✅ Updated README.md")
     }
 
     private func createPackageDependencies() throws {
         let mermaid = try createMermaid()
-        let url = URL(fileURLWithPath: projectPath)
-            .appendingPathComponent("PackageDependencies.md")
+        let url = URL(fileURLWithPath: projectPath).appendingPathComponent("PackageDependencies.md")
         try mermaid.write(to: url, atomically: true, encoding: .utf8)
         print("✅ Created PackageDependencies.md")
     }

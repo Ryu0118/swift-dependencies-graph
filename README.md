@@ -1,11 +1,32 @@
 # swift-dependencies-graph
-# PackageDependencies
+CLI tool to output mermaid dependencies between Swift Package Manager targets
+
+## Usage
+```
+USAGE: dgraph <project-path> [--add-to-readme]
+
+ARGUMENTS:
+  <project-path>          Project root directory
+
+OPTIONS:
+  --add-to-readme         Add Mermaid diagram to README
+  -h, --help              Show help information.
+```
+
+## Example
 ```mermaid
 graph TD;
-    DependenciesGraph-->DependenciesGraphCore;
-    DependenciesGraphTests-->DependenciesGraphCore;
+    App-->HogeFeature;
+    App-->FugaFeature;
+    App-->LoginClient;
+    LoginFeature-->CoreModule;
+    LoginFeature-->LoginClient;
+    LoginClient-->CoreModule;
+    HogeFeature-->CoreModule;
+    FugaFeature-->CoreModule;
 ```
-# PackageDependencies
+
+## Package Dependencies
 ```mermaid
 graph TD;
     DependenciesGraph-->DependenciesGraphCore;

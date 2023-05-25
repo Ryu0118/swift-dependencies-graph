@@ -1,5 +1,5 @@
 # swift-dependencies-graph
-CLI tool to output mermaid dependencies between Swift Package Manager targets
+CLI tool to output mermaid diagrams of module dependencies for multi-modularized projects in Swift Package Manager.
 
 ## Installation
 #### Mint

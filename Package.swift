@@ -28,7 +28,7 @@ let package = Package(
         ),
         .target(name: "DependenciesGraphCore"),
         .testTarget(
-            name: "DependenciesGraphTests",
+            name: "DependenciesGraphCoreTests",
             dependencies: ["DependenciesGraphCore"]
         ),
     ]

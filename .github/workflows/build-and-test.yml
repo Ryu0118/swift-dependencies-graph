@@ -1,0 +1,37 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:  
+    name: Build and Test using any available macOS
+    strategy:
+      fail-fast: false
+      matrix:
+        macos:
+          - 12
+        xcode:
+          - latest-stable    
+    runs-on: macos-${{ amtrix.macos }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Build
+        env:
+          scheme: ${{ 'swift-dependencies-graph' }}
+          platform: ${{ 'macOS' }}
+        run: |
+          xcodebuild build-for-testing -scheme "$scheme" -destination "platform=$platform"
+  
+      - name: Test
+        env:
+          scheme: ${{ 'swift-dependencies-graph' }}
+          platform: ${{ 'macOS' }}
+        run: |
+          xcodebuild test-without-building -scheme "$scheme" -destination "platform=$platform"

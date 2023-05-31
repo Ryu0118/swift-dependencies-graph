@@ -16,7 +16,7 @@ jobs:
           - 12
         xcode:
           - latest-stable    
-    runs-on: macos-${{ amtrix.macos }}
+    runs-on: macos-${{ matrix.macos }}
 
     steps:
       - name: Checkout

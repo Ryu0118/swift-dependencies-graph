@@ -11,14 +11,11 @@ jobs:
   build:  
     name: Build and Test using any available macOS
     strategy:
-      fail-fast: false
+      fail-fast: false    
       matrix:
-        macos:
-          - 12
-        xcode:
-          - latest-stable    
-    runs-on: macos-${{ matrix.macos }}
-
+        os: [macos-latest]
+        xcode: [latest-stable]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

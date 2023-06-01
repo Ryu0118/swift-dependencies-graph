@@ -50,7 +50,7 @@ struct DependenciesGraph: ParsableCommand {
             throw DependenciesGraphError.failedToDecodeReadme
         }
         let removedReadme = ReadmeReader.removeLines(readme, from: "## Package Dependencies")
-        readme = removedReadme + readmeTitle + "\n" + mermaid
+        readme = removedReadme + readmeTitle + "\n" + mermaid + "\n"
         try readme.write(to: url, atomically: true, encoding: .utf8)
         print("✅ Updated README.md")
     }

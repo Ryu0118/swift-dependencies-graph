@@ -13,6 +13,7 @@ $ brew install Ryu0118/dgraph/dgraph
 ``` 
 ##### update
 ```
+$ brew update
 $ brew upgrade Ryu0118/dgraph/dgraph
 ```
 

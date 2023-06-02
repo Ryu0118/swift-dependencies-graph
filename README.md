@@ -4,13 +4,17 @@ CLI tool to output mermaid diagrams of module dependencies for multi-modularized
 ## Installation
 #### Mint
 ```
-Ryu0118/swift-dependencies-graph@0.0.1
+Ryu0118/swift-dependencies-graph@0.0.2
 ```
 
 #### Homebrew
 ```
 $ brew install Ryu0118/dgraph/dgraph
 ``` 
+##### update
+```
+$ brew upgrade Ryu0118/dgraph/dgraph
+```
 
 ## Usage
 ```

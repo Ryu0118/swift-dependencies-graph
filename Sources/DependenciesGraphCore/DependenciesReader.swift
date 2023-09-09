@@ -13,12 +13,12 @@ public struct DependenciesReader {
         self.decoder = decoder
     }
 
-    public func readDependencies() throws -> [Module] {
+    public func readDependencies(isIncludeProduct: Bool) throws -> [Module] {
         let jsonString = try dumpPackage()
         let jsonData = jsonString.data(using: .utf8)!
         return try decoder
             .decode(DumpPackageResponse.self, from: jsonData)
-            .toModule()
+            .toModule(isIncludeProduct: isIncludeProduct)
     }
 
     private func dumpPackage() throws -> String {
@@ -39,14 +39,17 @@ private struct DumpPackageResponse: Decodable {
 
         struct Dependency: Decodable {
             let byName: [String?]?
+            let product: [String?]?
         }
     }
 }
 
 extension DumpPackageResponse {
-    func toModule() -> [Module] {
+    func toModule(isIncludeProduct: Bool) -> [Module] {
         targets.map { target in
-            let dependencies = target.dependencies.compactMap { $0.byName?.compactMap { $0 }.first }
+            let byNameDependencies = target.dependencies.compactMap { $0.byName?.compactMap { $0 }.first }
+            let productDependencies = target.dependencies.compactMap { $0.product?.compactMap { $0 }.first }
+            let dependencies = isIncludeProduct ? byNameDependencies + productDependencies : byNameDependencies
             return Module(name: target.name, dependencies: dependencies)
         }
     }

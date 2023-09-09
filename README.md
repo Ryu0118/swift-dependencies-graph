@@ -4,7 +4,7 @@ CLI tool to output mermaid diagrams of module dependencies for multi-modularized
 ## Installation
 #### Mint
 ```
-Ryu0118/swift-dependencies-graph@0.0.2
+Ryu0118/swift-dependencies-graph@0.1.0
 ```
 
 #### Homebrew
@@ -19,13 +19,14 @@ $ brew upgrade Ryu0118/dgraph/dgraph
 
 ## Usage
 ```
-USAGE: dgraph <project-path> [--add-to-readme]
+USAGE: dgraph <project-path> [--add-to-readme] [--include-product]
 
 ARGUMENTS:
   <project-path>          Project root directory
 
 OPTIONS:
   --add-to-readme         Add Mermaid diagram to README
+  --include-product       Include .product(name:package:)
   -h, --help              Show help information.
 ```
 

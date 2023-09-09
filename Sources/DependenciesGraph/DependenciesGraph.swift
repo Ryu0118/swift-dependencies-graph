@@ -10,6 +10,9 @@ struct DependenciesGraph: ParsableCommand {
     @Flag(name: .customLong("add-to-readme"), help: "Add Mermaid diagram to README")
     var isAddToReadme: Bool = false
 
+    @Flag(name: .customLong("include-product"), help: "Include .product(name:package:)")
+    var isIncludeProduct: Bool = false
+
     static let _commandName: String = "dgraph"
     
     private var fileManager: FileManager { FileManager.default }
@@ -65,7 +68,7 @@ struct DependenciesGraph: ParsableCommand {
     private func createMermaid() throws -> String {
         print("🚀 Reading dependencies...")
         let reader = DependenciesReader(packageRootDirectoryPath: projectPath)
-        let modules = try reader.readDependencies()
+        let modules = try reader.readDependencies(isIncludeProduct: isIncludeProduct)
         print("🧜 Creating Mermaid...")
         let mermaid = MermaidCreator.create(from: modules)
         return mermaid

@@ -14,7 +14,7 @@ jobs:
       fail-fast: false    
       matrix:
         os: [macos-latest]
-        xcode: [latest-stable]
+        xcode: ['15.0']
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout

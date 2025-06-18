@@ -37,39 +37,31 @@ To convert the generated Mermaid diagrams to image files (SVG, PNG, PDF), you ne
 
 ### Prerequisites
 
-1. **Install Node.js** (if not already installed)
+**Install Mermaid CLI globally**
    ```bash
-   # Using Homebrew on macOS
-   brew install node
-
-   # Or download from https://nodejs.org/
-   ```
-
-2. **Install Mermaid CLI globally**
-   ```bash
-   npm install -g @mermaid-js/mermaid-cli
+   $ npm install -g @mermaid-js/mermaid-cli
    ```
 
 ### Step-by-Step Process
 
-1. **Generate Mermaid diagram** using this tool:
+. **Generate Mermaid diagram** using this tool:
    ```bash
-   dgraph /path/to/your/swift/project > dependencies.mmd
+   $ dgraph /path/to/your/swift/project > dependencies.mmd
    ```
 
 2. **Convert to image format**:
    ```bash
    # Convert to SVG
-   mmdc -i dependencies.mmd -o dependencies.svg
+   $ mmdc -i dependencies.mmd -o dependencies.svg
 
    # Convert to PNG
-   mmdc -i dependencies.mmd -o dependencies.png
+   $ mmdc -i dependencies.mmd -o dependencies.png
 
    # Convert to PNG with dark theme
-   mmdc -i dependencies.mmd -o dependencies.png -t dark
+   $ mmdc -i dependencies.mmd -o dependencies.png -t dark
 
    # Convert to PNG with transparent background
-   mmdc -i dependencies.mmd -o dependencies.png -b transparent
+   $ mmdc -i dependencies.mmd -o dependencies.png -b transparent
    ```
 
 ## Example

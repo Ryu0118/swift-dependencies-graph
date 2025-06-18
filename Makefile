@@ -1,6 +1,6 @@
 COMMAND_NAME = dgraph
 BINARY_PATH = ./.build/release/$(COMMAND_NAME)
-VERSION = 0.1.0
+VERSION = 0.2.0
 
 .PHONY: release
 release:

@@ -1,35 +1,35 @@
-name: Build and Test
+name: Test
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+    paths-ignore:
+      - README.md
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - README.md
   workflow_dispatch:
+
+concurrency:
+  group: format-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:  
-    name: Build and Test using any available macOS
+    name: Test
     strategy:
       fail-fast: false    
       matrix:
-        os: [macos-latest]
-        xcode: ['15.0']
+        os: [macos-15]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Select Xcode 16
+        run: sudo xcode-select -s /Applications/Xcode_16.3.app
         
-      - name: Build
-        env:
-          scheme: ${{ 'swift-dependencies-graph' }}
-          platform: ${{ 'macOS' }}
-        run: |
-          xcodebuild build-for-testing -scheme "$scheme" -destination "platform=$platform"
-  
       - name: Test
-        env:
-          scheme: ${{ 'swift-dependencies-graph' }}
-          platform: ${{ 'macOS' }}
-        run: |
-          xcodebuild test-without-building -scheme "$scheme" -destination "platform=$platform"
+        run: swift test
+

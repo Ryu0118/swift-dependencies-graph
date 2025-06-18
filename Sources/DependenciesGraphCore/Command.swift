@@ -1,4 +1,3 @@
-#if os(macOS)
 import Foundation
 
 enum Command {
@@ -28,4 +27,3 @@ enum Command {
 enum CommandError: Error {
     case cannotReadData
 }
-#endif

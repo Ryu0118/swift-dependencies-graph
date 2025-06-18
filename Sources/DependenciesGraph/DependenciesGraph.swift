@@ -1,6 +1,6 @@
-import Foundation
 import ArgumentParser
 import DependenciesGraphCore
+import Foundation
 
 @main
 struct DependenciesGraph: ParsableCommand {
@@ -13,31 +13,29 @@ struct DependenciesGraph: ParsableCommand {
     @Flag(name: .customLong("include-product"), help: "Include .product(name:package:)")
     var isIncludeProduct: Bool = false
 
+    @Flag(name: .customLong("strip-transitive"), help: "Strip transitive dependencies to avoid redundant arrows")
+    var isStripTransitive: Bool = false
+
     static let _commandName: String = "dgraph"
-    
+
     private var fileManager: FileManager { FileManager.default }
 
     mutating func run() throws {
-        #if os(macOS)
         if isAddToReadme {
             try addToReadme()
         } else {
             try createPackageDependencies()
         }
-        #endif
     }
 
     mutating func validate() throws {
         if !URL(fileURLWithPath: projectPath).hasDirectoryPath {
             throw DependenciesGraphError.notDirectory(path: projectPath)
-        }
-        else if !fileManager.fileExists(atPath: projectPath) {
+        } else if !fileManager.fileExists(atPath: projectPath) {
             throw DependenciesGraphError.projectNotFound(path: projectPath)
-        }
-        else if !fileManager.fileExists(atPath: projectPath + "/Package.swift") {
+        } else if !fileManager.fileExists(atPath: projectPath + "/Package.swift") {
             throw DependenciesGraphError.packageSwiftNotFound(path: projectPath)
-        }
-        else if !fileManager.fileExists(atPath: projectPath + "/README.md") && isAddToReadme {
+        } else if !fileManager.fileExists(atPath: projectPath + "/README.md"), isAddToReadme {
             throw DependenciesGraphError.readmeNotFound
         }
     }
@@ -70,7 +68,7 @@ struct DependenciesGraph: ParsableCommand {
         let reader = DependenciesReader(packageRootDirectoryPath: projectPath)
         let modules = try reader.readDependencies(isIncludeProduct: isIncludeProduct)
         print("🧜 Creating Mermaid...")
-        let mermaid = MermaidCreator.create(from: modules)
+        let mermaid = MermaidCreator.create(from: modules, stripTransitive: isStripTransitive)
         return mermaid
     }
 }
@@ -84,20 +82,20 @@ enum DependenciesGraphError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .projectNotFound(let path):
-            return "\(path) could not be found"
+        case let .projectNotFound(path):
+            "\(path) could not be found"
 
-        case .packageSwiftNotFound(let path):
-            return "\(path)/Package.swift could not be found"
+        case let .packageSwiftNotFound(path):
+            "\(path)/Package.swift could not be found"
 
-        case .notDirectory(let path):
-            return "\(path) is not a directory"
+        case let .notDirectory(path):
+            "\(path) is not a directory"
 
         case .readmeNotFound:
-            return "README.md could not be found"
+            "README.md could not be found"
 
         case .failedToDecodeReadme:
-            return "Failed to decode README.md"
+            "Failed to decode README.md"
         }
     }
 }

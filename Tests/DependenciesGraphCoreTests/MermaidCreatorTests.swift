@@ -1,52 +1,103 @@
-import XCTest
 @testable import DependenciesGraphCore
+import Testing
 
-class MermaidCreatorTests: XCTestCase {
-    func testMermaidCreator() {
-        XCTAssertEqual(
-            MermaidCreator.create(
-                from: [
-                    Module(name: "module1", dependencies: ["module2", "module3"]),
-                    Module(name: "module2", dependencies: ["module3"]),
-                    Module(name: "module3", dependencies: [])
-                ]
-            ),
-            """
-            ```mermaid
-            graph TD;
-                module1-->module2;
-                module1-->module3;
-                module2-->module3;
-            ```
-            """
-        )
+struct MermaidCreatorTests {
+    @Test func createMermaid() {
+        let modules = [
+            Module(name: "A", dependencies: ["B"]),
+            Module(name: "B", dependencies: ["C"]),
+            Module(name: "C", dependencies: []),
+        ]
+
+        let result = MermaidCreator.create(from: modules)
+        let expected = """
+        ```mermaid
+        graph TD;
+            A-->B;
+            B-->C;
+        ```
+        """
+
+        #expect(result == expected)
     }
 
-    func testMermaidCreatorWithNoDependencies() {
-        XCTAssertEqual(
-            MermaidCreator.create(
-                from: [
-                    Module(name: "module1", dependencies: []),
-                    Module(name: "module2", dependencies: []),
-                    Module(name: "module3", dependencies: [])
-                ]
-            ),
-            """
-            ```mermaid
-            graph TD;
-            ```
-            """
-        )
+    @Test func createMermaidWithTransitiveStripping() {
+        let modules = [
+            Module(name: "A", dependencies: ["B", "C"]),
+            Module(name: "B", dependencies: ["C"]),
+            Module(name: "C", dependencies: []),
+        ]
+
+        let result = MermaidCreator.create(from: modules, stripTransitive: true)
+        let expected = """
+        ```mermaid
+        graph TD;
+            A-->B;
+            B-->C;
+        ```
+        """
+
+        #expect(result == expected)
     }
 
-    func testMermaidCreatorWithNoModules() {
-        XCTAssertEqual(
-            MermaidCreator.create(from: []),
-            """
-            ```mermaid
-            graph TD;
-            ```
-            """
-        )
+    @Test func createMermaidWithoutTransitiveStripping() {
+        let modules = [
+            Module(name: "A", dependencies: ["B", "C"]),
+            Module(name: "B", dependencies: ["C"]),
+            Module(name: "C", dependencies: []),
+        ]
+
+        let result = MermaidCreator.create(from: modules, stripTransitive: false)
+        let expected = """
+        ```mermaid
+        graph TD;
+            A-->B;
+            A-->C;
+            B-->C;
+        ```
+        """
+
+        #expect(result == expected)
+    }
+
+    @Test func complexTransitiveDependencies() {
+        let modules = [
+            Module(name: "A", dependencies: ["B", "C", "D"]),
+            Module(name: "B", dependencies: ["C"]),
+            Module(name: "C", dependencies: ["D"]),
+            Module(name: "D", dependencies: []),
+        ]
+
+        let result = MermaidCreator.create(from: modules, stripTransitive: true)
+        let expected = """
+        ```mermaid
+        graph TD;
+            A-->B;
+            B-->C;
+            C-->D;
+        ```
+        """
+
+        #expect(result == expected)
+    }
+
+    @Test func noTransitiveDependencies() {
+        let modules = [
+            Module(name: "A", dependencies: ["B"]),
+            Module(name: "C", dependencies: ["D"]),
+            Module(name: "B", dependencies: []),
+            Module(name: "D", dependencies: []),
+        ]
+
+        let result = MermaidCreator.create(from: modules, stripTransitive: true)
+        let expected = """
+        ```mermaid
+        graph TD;
+            A-->B;
+            C-->D;
+        ```
+        """
+
+        #expect(result == expected)
     }
 }

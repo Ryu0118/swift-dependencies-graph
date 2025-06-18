@@ -1,0 +1,28 @@
+on:
+  release:
+    types: [published, edited]
+name: Upload Artifact Bundle to Release
+env:
+  DEVELOPER_DIR: '/Applications/Xcode_16.2.app/Contents/Developer'
+jobs:
+  release:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Universal Binary
+        run: swift build --disable-sandbox -c release --arch arm64 --arch x86_64
+      - uses: giginet/github-action-artifactbundle@v2
+        id: artifactbundle
+        with:
+          artifact_name: dgraph
+      - name: Upload Artifact Bundle to Release
+        run: |
+          BODY="${{ github.event.release.body }}"
+          BUNDLE_PATH="${{ steps.artifactbundle.outputs.bundle_path }}"
+          SHA256="${{ steps.artifactbundle.outputs.bundle_sha256 }}"
+          TAG_NAME="${{ github.event.release.tag_name }}"
+          gh release upload "${TAG_NAME}" "${BUNDLE_PATH}"
+          NEW_BODY="$(printf "%s\n%s" "$BODY" "$SHA256")"
+          gh release edit "${TAG_NAME}" --notes "${NEW_BODY}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

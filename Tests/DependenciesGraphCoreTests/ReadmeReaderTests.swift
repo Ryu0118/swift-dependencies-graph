@@ -1,34 +1,31 @@
-import XCTest
 @testable import DependenciesGraphCore
+import Testing
 
-final class ReadmeReaderTests: XCTestCase {
-    func testRemoveLinesWithTargetString() {
-        XCTAssertEqual(
+struct ReadmeReaderTests {
+    @Test func removeLinesWithTargetString() {
+        #expect(
             ReadmeReader.removeLines(
                 "This is a readme text.",
                 from: "readme"
-            ),
-            ""
+            ) == ""
         )
     }
 
-    func testRemoveLinesWithoutTargetString() {
-        XCTAssertEqual(
+    @Test func removeLinesWithoutTargetString() {
+        #expect(
             ReadmeReader.removeLines(
                 "This is a readme text.",
                 from: "Non-existent string"
-            ),
-            "This is a readme text.\n"
+            ) == "This is a readme text.\n"
         )
     }
 
-    func testRemoveLinesWithEmptyString() {
-        XCTAssertEqual(
+    @Test func removeLinesWithEmptyString() {
+        #expect(
             ReadmeReader.removeLines(
                 "",
                 from: "Non-existent string"
-            ),
-            "\n"
+            ) == "\n"
         )
     }
 }

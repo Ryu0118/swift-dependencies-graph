@@ -1,4 +1,3 @@
-#if os(macOS)
 import Foundation
 
 public struct DependenciesReader {
@@ -47,11 +46,10 @@ private struct DumpPackageResponse: Decodable {
 extension DumpPackageResponse {
     func toModule(isIncludeProduct: Bool) -> [Module] {
         targets.map { target in
-            let byNameDependencies = target.dependencies.compactMap { $0.byName?.compactMap { $0 }.first }
-            let productDependencies = target.dependencies.compactMap { $0.product?.compactMap { $0 }.first }
+            let byNameDependencies = target.dependencies.compactMap { $0.byName?.compactMap(\.self).first }
+            let productDependencies = target.dependencies.compactMap { $0.product?.compactMap(\.self).first }
             let dependencies = isIncludeProduct ? byNameDependencies + productDependencies : byNameDependencies
             return Module(name: target.name, dependencies: dependencies)
         }
     }
 }
-#endif

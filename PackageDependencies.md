@@ -1,5 +1,5 @@
 ```mermaid
 graph TD;
     DependenciesGraph-->DependenciesGraphCore;
-    DependenciesGraphTests-->DependenciesGraphCore;
+    DependenciesGraphCoreTests-->DependenciesGraphCore;
 ```

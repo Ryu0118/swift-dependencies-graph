@@ -8,25 +8,25 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:  
+  build:
     name: Build and Test using any available macOS
     strategy:
-      fail-fast: false    
+      fail-fast: false
       matrix:
         os: [macos-latest]
         xcode: [latest-stable]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-        
+        uses: actions/checkout@v4
+
       - name: Build
         env:
           scheme: ${{ 'swift-dependencies-graph' }}
           platform: ${{ 'macOS' }}
         run: |
           xcodebuild build-for-testing -scheme "$scheme" -destination "platform=$platform"
-  
+
       - name: Test
         env:
           scheme: ${{ 'swift-dependencies-graph' }}

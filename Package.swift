@@ -1,4 +1,4 @@
-// swift-tools-version: 5.7
+// swift-tools-version: 6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,10 +6,10 @@ import PackageDescription
 let package = Package(
     name: "swift-dependencies-graph",
     platforms: [
-        .macOS(.v11)
+        .macOS(.v11),
     ],
     products: [
-        .executable(name: "dgraph", targets: ["DependenciesGraph"])
+        .executable(name: "dgraph", targets: ["DependenciesGraph"]),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -23,7 +23,7 @@ let package = Package(
             name: "DependenciesGraph",
             dependencies: [
                 "DependenciesGraphCore",
-                .product(name: "ArgumentParser", package: "swift-argument-parser")
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
             ]
         ),
         .target(name: "DependenciesGraphCore"),

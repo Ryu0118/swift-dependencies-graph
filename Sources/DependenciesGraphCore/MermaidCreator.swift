@@ -1,80 +1,87 @@
 import Foundation
 
 public enum MermaidCreator {
-    public static func create(from modules: [Module], stripTransitive: Bool = false) -> String {
+    public static func create(
+        from modules: [Module],
+        stripTransitive: Bool = false
+    ) -> String {
         let processedModules = stripTransitive ? stripTransitiveDependencies(modules) : modules
 
-        var mermaid = "```mermaid"
-        mermaid.newLine("graph TD;")
-        for module in processedModules {
-            for dependency in module.dependencies {
-                mermaid.newLine("\(module.name)-->\(dependency);", indent: 1)
+        let mermaidLines = processedModules
+            .flatMap { module in
+                module.dependencies.map { dependency in
+                    "    \(module.name)-->\(dependency);"
+                }
             }
-        }
-        mermaid.newLine("```")
-        return mermaid
+
+        return ["```mermaid", "graph TD;"]
+            .appending(contentsOf: mermaidLines)
+            .appending("```")
+            .joined(separator: "\n")
     }
 
-    private static func stripTransitiveDependencies(_ modules: [Module]) -> [Module] {
-        // 全ての依存関係のマップを作成
-        var dependencyMap: [String: Set<String>] = [:]
-        for module in modules {
-            dependencyMap[module.name] = Set(module.dependencies)
+    private static func stripTransitiveDependencies(
+        _ modules: [Module]
+    ) -> [Module] {
+        let dependencyMap = modules.reduce(into: [String: Set<String>]()) { map, module in
+            map[module.name] = Set(module.dependencies)
         }
 
-        // 推移的依存関係を計算（Floyd-Warshall的アプローチ）
-        var transitiveDependencies: [String: Set<String>] = dependencyMap
-
-        // 各モジュールについて推移的依存関係を計算
-        for module in modules {
+        let transitiveDependencies = modules.reduce(into: [String: Set<String>]()) { result, module in
             var visited = Set<String>()
             var transitive = Set<String>()
-            findTransitiveDependencies(from: module.name,
-                                       dependencyMap: dependencyMap,
-                                       visited: &visited,
-                                       transitive: &transitive)
-            transitiveDependencies[module.name] = transitive
+            findTransitiveDependencies(
+                from: module.name,
+                dependencyMap: dependencyMap,
+                visited: &visited,
+                transitive: &transitive
+            )
+            result[module.name] = transitive
         }
 
-        // 直接的依存関係から推移的依存関係を除去
         return modules.map { module in
             let directDependencies = Set(module.dependencies)
-            var filteredDependencies = directDependencies
 
-            // 各直接依存関係について、それが他の直接依存関係を通じて到達可能かチェック
-            for dependency in directDependencies {
-                for otherDependency in directDependencies {
-                    if dependency != otherDependency {
+            let filteredDependencies = directDependencies.filter { dependency in
+                !directDependencies
+                    .subtracting([dependency])
+                    .contains { otherDependency in
                         let otherTransitive = transitiveDependencies[otherDependency] ?? Set()
-                        if otherTransitive.contains(dependency) {
-                            filteredDependencies.remove(dependency)
-                        }
+                        return otherTransitive.contains(dependency)
                     }
-                }
             }
 
             return Module(name: module.name, dependencies: Array(filteredDependencies))
         }
     }
 
-    private static func findTransitiveDependencies(from moduleName: String,
-                                                   dependencyMap: [String: Set<String>],
-                                                   visited: inout Set<String>,
-                                                   transitive: inout Set<String>)
-    {
-        if visited.contains(moduleName) {
-            return
-        }
+    private static func findTransitiveDependencies(
+        from moduleName: String,
+        dependencyMap: [String: Set<String>],
+        visited: inout Set<String>,
+        transitive: inout Set<String>
+    ) {
+        guard !visited.contains(moduleName) else { return }
         visited.insert(moduleName)
 
-        guard let dependencies = dependencyMap[moduleName] else { return }
-
-        for dependency in dependencies {
+        dependencyMap[moduleName]?.forEach { dependency in
             transitive.insert(dependency)
-            findTransitiveDependencies(from: dependency,
-                                       dependencyMap: dependencyMap,
-                                       visited: &visited,
-                                       transitive: &transitive)
+            findTransitiveDependencies(
+                from: dependency,
+                dependencyMap: dependencyMap,
+                visited: &visited,
+                transitive: &transitive
+            )
         }
+    }
+}
+
+private extension Array {
+    func appending(_ element: Element) -> Array {
+        return self + [element]
+    }
+
+    func appending<S: Sequence>(contentsOf sequence: S) -> Array where S.Element == Element {
+        return self + Array(sequence)
     }
 }

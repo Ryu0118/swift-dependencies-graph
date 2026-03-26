@@ -30,7 +30,12 @@ let package = Package(
         .target(name: "DependenciesGraphCore"),
         .testTarget(
             name: "DependenciesGraphCoreTests",
-            dependencies: ["DependenciesGraphCore"]
+            dependencies: ["DependenciesGraphCore"],
+            resources: [
+                .copy("Resources/dump_package.json"),
+                .copy("Resources/dump_package_by_name.json"),
+                .copy("Resources/dump_package_mix.json")
+            ]
         ),
     ]
 )

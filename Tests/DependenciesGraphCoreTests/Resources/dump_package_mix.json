@@ -1,0 +1,241 @@
+{
+  "cLanguageStandard" : null,
+  "cxxLanguageStandard" : null,
+  "dependencies" : [
+    {
+      "sourceControl" : [
+        {
+          "identity" : "swift-collections",
+          "location" : {
+            "remote" : [
+              {
+                "urlString" : "https://github.com/apple/swift-collections"
+              }
+            ]
+          },
+          "productFilter" : null,
+          "requirement" : {
+            "range" : [
+              {
+                "lowerBound" : "1.1.4",
+                "upperBound" : "2.0.0"
+              }
+            ]
+          },
+          "traits" : [
+            {
+              "name" : "default"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "name" : "redux-kit",
+  "pkgConfig" : null,
+  "platforms" : [
+    {
+      "options" : [
+
+      ],
+      "platformName" : "macos",
+      "version" : "14.0"
+    },
+    {
+      "options" : [
+
+      ],
+      "platformName" : "ios",
+      "version" : "17.0"
+    }
+  ],
+  "products" : [
+    {
+      "name" : "ReduxKit",
+      "settings" : [
+
+      ],
+      "targets" : [
+        "ReduxKit"
+      ],
+      "type" : {
+        "library" : [
+          "automatic"
+        ]
+      }
+    },
+    {
+      "name" : "ReduxKitExtensions",
+      "settings" : [
+
+      ],
+      "targets" : [
+        "ReduxKitExtensions"
+      ],
+      "type" : {
+        "library" : [
+          "automatic"
+        ]
+      }
+    },
+    {
+      "name" : "ReduxKitUI",
+      "settings" : [
+
+      ],
+      "targets" : [
+        "ReduxKitUI"
+      ],
+      "type" : {
+        "library" : [
+          "automatic"
+        ]
+      }
+    }
+  ],
+  "providers" : null,
+  "swiftLanguageVersions" : null,
+  "targets" : [
+    {
+      "dependencies" : [
+
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "ReduxKit",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "regular"
+    },
+    {
+      "dependencies" : [
+        {
+          "byName" : [
+            "ReduxKit",
+            null
+          ]
+        }
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "ReduxKitTests",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "test"
+    },
+    {
+      "dependencies" : [
+        {
+          "target" : [
+            "ReduxKit",
+            null
+          ]
+        }
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "ReduxKitUI",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "regular"
+    },
+    {
+      "dependencies" : [
+        {
+          "target" : [
+            "ReduxKit",
+            null
+          ]
+        },
+        {
+          "product" : [
+            "Collections",
+            "swift-collections",
+            null,
+            null
+          ]
+        }
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "ReduxKitExtensions",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "regular"
+    },
+    {
+      "dependencies" : [
+        {
+          "byName" : [
+            "ReduxKitExtensions",
+            null
+          ]
+        }
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "ReduxKitExtensionsTests",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "test"
+    },
+    {
+      "dependencies" : [
+        {
+          "target" : [
+            "ReduxKit",
+            null
+          ]
+        }
+      ],
+      "exclude" : [
+
+      ],
+      "name" : "ExampleApp",
+      "packageAccess" : true,
+      "resources" : [
+
+      ],
+      "settings" : [
+
+      ],
+      "type" : "executable"
+    }
+  ],
+  "toolsVersion" : {
+    "_version" : "6.0.0"
+  },
+  "traits" : [
+
+  ]
+}
